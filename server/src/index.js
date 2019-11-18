@@ -11,8 +11,8 @@ app.use(morgan("combined"));
 app.use(cors());
 
 // Routes
-const pokemon = require('./routes');
-app.use('/pokemon', pokemon);
+const routes = require('./routes');
+routes(app)
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Am running at port ${port}`));

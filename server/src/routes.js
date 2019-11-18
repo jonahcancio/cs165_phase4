@@ -1,12 +1,7 @@
-const express = require("express");
-const router = express.Router();
+const user_view = require('./views/user_view');
 
-const queries = require("./queries");
+function bindRoutes(app) {
+  app.use("/user", user_view)
+}
 
-// Get Pokemon
-router.get("/", async (req, res) => {
-  let results = await queries.getPokemonBases();
-  res.send(results);
-});
-
-module.exports = router;
+module.exports = bindRoutes;
