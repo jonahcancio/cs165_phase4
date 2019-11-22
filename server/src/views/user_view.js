@@ -1,6 +1,5 @@
 const serializer = require("../db/user_serializer");
-const express = require("express");
-const router = express.Router();
+const router = require("express").Router();
 
 async function getAllUsers(request, response) {
   try {
@@ -21,7 +20,7 @@ async function getOneUser(request, response) {
   }
 }
 
-async function putUser(request, response) {
+async function putChangedUser(request, response) {
   let user_id = request.params.user_id;
   try {
     let result = await serializer.update(user_id, request.body);
@@ -40,7 +39,7 @@ async function postNewUser(request, response) {
   }
 }
 
-async function deleteUser(request, response) {
+async function deleteOldUser(request, response) {
   let user_id = request.params.user_id;
   try {
     let result = await serializer.delete(user_id);
@@ -53,7 +52,7 @@ async function deleteUser(request, response) {
 router.post("/", postNewUser);
 router.get("/", getAllUsers);
 router.get("/:user_id(\\d+)/", getOneUser);
-router.put("/:user_id(\\d+)/", putUser);
-router.delete("/:user_id(\\d+)", deleteUser);
+router.put("/:user_id(\\d+)/", putChangedUser);
+router.delete("/:user_id(\\d+)", deleteOldUser);
 
 module.exports = router;

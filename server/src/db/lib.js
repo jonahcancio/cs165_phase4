@@ -3,38 +3,22 @@ const config = require("../config");
 
 var conn = mysql.createConnection(config.db);
 
-function executeQuery(queryString, valuesArray) {
-  return new Promise((resolve, reject) => {
-    conn.beginTransaction(error => {
-      if (error) {
-        reject("Begin Transaction failed -- " + error);
-      }
-      resolve();
-    });
-  })
-    .then(() => {
-      return new Promise((resolve, reject) => {
-        conn.query(queryString, valuesArray, (error, results) => {
-          if (error) {
-            reject("Query failed -- " + error);
-          }
-          resolve(results);
-        });
+function appendPromise(promiseChain, obj) {
+  return promiseChain.then((resultsList) => {
+    return new Promise((resolve, reject) => {
+      conn.query(obj.query, obj.escapes, (error, results) => {
+        if (error) {
+          reject("Query failed -- " + error);
+        }
+        resultsList.push(results);
+        resolve(resultsList);
       });
-    })
-    .then(results => {
-      conn.commit();
-      console.log("Single query transaction success: " + queryString);
-      console.log(valuesArray);
-      return results;
-    })
-    .catch(error => {
-      conn.rollback();
-      throw error;
     });
+  });
 }
 
-function executeQueries(queryArray, nestedValuesArray) {
+function queryTransaction(queryList) {
+  console.log(JSON.stringify(queryList))
   let promiseChain = new Promise((resolve, reject) => {
     conn.beginTransaction(error => {
       if (error) {
@@ -43,26 +27,23 @@ function executeQueries(queryArray, nestedValuesArray) {
       resolve([]);
     });
   });
-  
-  for (let i = 0; i < queryArray.length; i++) {
-    promiseChain = promiseChain.then((resultsArray) => {
-      return new Promise((resolve, reject) => {
-        conn.query(queryArray[i], nestedValuesArray[i], (error, results) => {
-          if (error) {
-            reject("Query failed -- " + error);
-          }
-          resultsArray.push(results);
-          resolve(resultsArray);
-        });
-      });
-    });
+
+  // if single query
+  if (!Array.isArray(queryList)) {
+    promiseChain = appendPromise(promiseChain, queryList)
+  }
+  // if list of queries 
+  else {
+    queryList.forEach(obj => {
+      promiseChain = appendPromise(promiseChain, obj);
+    })
   }
 
   return promiseChain
-    .then((resultsArray) => {
+    .then((resultsList) => {
       conn.commit();
-      console.log("Multiple query transaction success: " + queryArray);
-      return resultsArray;
+      console.log("Transaction success: ", JSON.stringify(queryList));
+      return resultsList;
     })
     .catch(error => {
       conn.rollback();
@@ -78,7 +59,6 @@ var log = function() {
 };
 
 module.exports = {
-  executeQuery: executeQuery,
-  executeQueries: executeQueries,
+  queryTransaction: queryTransaction,
   log: log
 };
