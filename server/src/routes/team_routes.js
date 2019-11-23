@@ -1,11 +1,11 @@
-const serializer = require("../db/team_serializer");
-const router = require("./user_view");
+const extractor = require("../extractors/team_extractor");
+const router = require("./user_routes");
 
 
 async function getAllTeams(request, response) {
   let { user_id } = request.params;
   try {
-    let result = await serializer.list(user_id);
+    let result = await extractor.list(user_id);
     response.send(result);
   } catch (error) {
     response.send(error);
@@ -15,7 +15,7 @@ async function getAllTeams(request, response) {
 async function getOneTeam(request, response) {
   let { user_id, team_id } = request.params;
   try {
-    let result = await serializer.retrieve(user_id, team_id);
+    let result = await extractor.retrieve(user_id, team_id);
     response.send(result);
   } catch (error) {
     response.send(error);
@@ -24,8 +24,9 @@ async function getOneTeam(request, response) {
 
 async function postNewTeam(request, response) {
   let { user_id } = request.params;
+  let { user_id: _u, ...team_obj } = request.body
   try {
-    let result = await serializer.create(user_id, request.body);
+    let result = await extractor.create(user_id, team_obj);
     response.send(result);
   } catch (error) {
     response.send(error);
@@ -35,8 +36,9 @@ async function postNewTeam(request, response) {
 
 async function putChangedTeam(request, response) {
   let { user_id, team_id } = request.params;
+  let { user_id: _u, team_id: _t, ...team_obj } = request.body;
   try {
-    let result = await serializer.update(user_id, team_id, request.body);
+    let result = await extractor.update(user_id, team_id, team_obj);
     response.send(result);
   } catch (error) {
     response.send(error);
@@ -47,7 +49,7 @@ async function putChangedTeam(request, response) {
 async function deleteOldTeam(request, response) {
   let { user_id, team_id } = request.params;
   try {
-    let result = await serializer.delete(user_id, team_id);
+    let result = await extractor.delete(user_id, team_id);
     response.send(result);
   } catch (error) {
     response.send(error);

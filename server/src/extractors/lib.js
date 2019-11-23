@@ -4,11 +4,12 @@ const config = require("../config");
 var conn = mysql.createConnection(config.db);
 
 function appendPromise(promiseChain, obj) {
-  return promiseChain.then((resultsList) => {
+  return promiseChain.then(resultsList => {
     return new Promise((resolve, reject) => {
       conn.query(obj.query, obj.escapes, (error, results) => {
         if (error) {
-          reject("Query failed -- " + error);
+          console.log("Query failed: " + error.sql);
+          reject(error);
         }
         resultsList.push(results);
         resolve(resultsList);
@@ -18,11 +19,11 @@ function appendPromise(promiseChain, obj) {
 }
 
 function queryTransaction(queryList) {
-  console.log(JSON.stringify(queryList))
   let promiseChain = new Promise((resolve, reject) => {
     conn.beginTransaction(error => {
       if (error) {
-        reject("Begin Transaction failed -- " + error);
+        console.log("Transaction failed");
+        reject(error);
       }
       resolve([]);
     });
@@ -30,20 +31,20 @@ function queryTransaction(queryList) {
 
   // if single query
   if (!Array.isArray(queryList)) {
-    promiseChain = appendPromise(promiseChain, queryList)
+    promiseChain = appendPromise(promiseChain, queryList);
   }
-  // if list of queries 
+  // if list of queries
   else {
     queryList.forEach(obj => {
       promiseChain = appendPromise(promiseChain, obj);
-    })
+    });
   }
 
   return promiseChain
-    .then((resultsList) => {
+    .then(resultsList => {
       conn.commit();
-      console.log("Transaction success: ", JSON.stringify(queryList));
-      return resultsList;
+      // console.log("Transaction success: ", JSON.stringify(queryList));
+      return resultsList[resultsList.length - 1];
     })
     .catch(error => {
       conn.rollback();
