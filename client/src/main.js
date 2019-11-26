@@ -9,6 +9,12 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 
 import '@/components/global'
+Vue.prototype.$console = window.console;
+
+import axios from 'axios'
+Vue.prototype.$axios = axios;
+
+Vue.prototype.$eventBus = new Vue()
 
 Vue.config.productionTip = false;
 

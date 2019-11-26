@@ -2,7 +2,9 @@ const lib = require("./lib");
 
 function listPokemonChoices() {
   return lib.queryTransaction({
-    query: `SELECT pokemon_name, type_1, type_2 FROM pokemon_bases`,
+    query: `SELECT pokemon_name, type_1, type_2, normal_image,
+    hp_base, attack_base, defense_base, spatk_base, spdef_base, speed_base
+    FROM pokemon_bases`,
     escapes: []
   });
 }

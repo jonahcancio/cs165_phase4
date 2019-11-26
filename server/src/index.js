@@ -10,6 +10,9 @@ app.use(bodyParser.json());
 app.use(morgan("combined"));
 app.use(cors());
 
+// static files
+app.use("/static", express.static(__dirname + '\\static'))
+
 // Routes
 const pokemon_router = require("./routes/pokemon_routes");
 const readonly_router = require("./routes/readonly_routes");

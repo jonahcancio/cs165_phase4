@@ -134,6 +134,8 @@ CREATE TABLE pokemon_bases
   pokemon_name VARCHAR(30),
   type_1 VARCHAR(10),
   type_2 VARCHAR(10),
+  normal_image VARCHAR(100),
+  shiny_image VARCHAR(100),
   hp_base INT UNSIGNED,
   attack_base INT UNSIGNED,
   defense_base INT UNSIGNED,
@@ -145,10 +147,12 @@ CREATE TABLE pokemon_bases
   FOREIGN KEY (type_2) REFERENCES p_type(type_name)
 );
 INSERT INTO pokemon_bases VALUES
-('Pikachu', 'Electric', NULL, 35, 55, 40, 50, 50, 90),
-('Squirtle', 'Water', NULL, 44, 48, 65, 50, 64, 43),
-('Ivysaur', 'Grass', 'Poison', 60, 62, 63, 80, 80, 60),
-('Charizard', 'Fire', 'Flying', 78, 84, 78, 109, 85, 100)
+('Pikachu', 'Electric', NULL, 'pikachu.jpg', NULL, 35, 55, 40, 50, 50, 90),
+('Squirtle', 'Water', NULL, 'squirtle.png', NULL, 44, 48, 65, 50, 64, 43),
+('Ivysaur', 'Grass', 'Poison', 'ivysaur.png', NULL, 60, 62, 63, 80, 80, 60),
+('Charizard', 'Fire', 'Flying', 'charizard.png', NULL, 78, 84, 78, 109, 85, 100),
+('Jigglypuff', 'Normal', 'Fairy', 'jigglypuff.png', NULL, 115, 45, 20, 45, 25, 20),
+('Mewtwo', 'Psychic', NULL, 'mewtwo.png', NULL, 106, 110, 90, 154, 90, 130)
 ;
 
 -- Special passive abilities; Pokemon usually choose between 1-3 possible ones
