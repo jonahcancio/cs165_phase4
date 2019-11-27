@@ -21,6 +21,14 @@
     <delete-modal :pokemon="selectedPokemon"></delete-modal>
     <item-modal :initialPokemon="selectedPokemon" :itemList="itemList" />
     <details-modal :pokemon="selectedPokemon" />
+    <ability-modal :pokemon="selectedPokemon" :abilityList="abilityList" />
+    <move-modal
+      :pokemon="selectedPokemon"
+      :moveList="moveList"
+      :moveNum="moveNum"
+      :typeColorHash="typeColorHash"
+    />
+    <stats-modal :pokemon="selectedPokemon" :natureHash="natureHash"/>
   </b-container>
 </template>
 
@@ -36,8 +44,10 @@ export default {
       itemList: [],
       abilityList: [],
       moveList: [],
+      natureHash: {},
       selectedPokemon: {},
-      isCreate: false
+      isCreate: false,
+      moveNum: 0
     };
   },
   created() {
@@ -48,9 +58,12 @@ export default {
     this.$eventBus.$on("SHOW_POKEMON_MODAL", _pokemon => {
       this.showPokemonModal(_pokemon, false);
     });
-    this.$eventBus.$on("SHOW_DELETE_MODAL",this.showDeleteModal);
+    this.$eventBus.$on("SHOW_DELETE_MODAL", this.showDeleteModal);
     this.$eventBus.$on("SHOW_ITEM_MODAL", this.showItemModal);
-    this.$eventBus.$on("SHOW_DETAILS_MODAL", this.showDetailsModal)
+    this.$eventBus.$on("SHOW_DETAILS_MODAL", this.showDetailsModal);
+    this.$eventBus.$on("SHOW_ABILITY_MODAL", this.showAbilityModal);
+    this.$eventBus.$on("SHOW_MOVE_MODAL", this.showMoveModal);
+    this.$eventBus.$on("SHOW_STATS_MODAL", this.showStatsModal);
 
     this.$eventBus.$on("REFRESH_POKEMON", this.apiGetPokemonCustoms);
   },
@@ -72,6 +85,23 @@ export default {
     showDetailsModal(_pokemon) {
       this.selectedPokemon = _pokemon;
       this.$bvModal.show("details-modal");
+    },
+    async showAbilityModal(_pokemon) {
+      this.selectedPokemon = _pokemon;
+      await this.apiGetAbilityList(_pokemon.pokemon_name);
+      this.$bvModal.show("ability-modal");
+    },
+    async showMoveModal(_payload) {
+      const { pokemon, moveNum } = _payload;
+      this.selectedPokemon = pokemon;
+      this.moveNum = moveNum;
+      await this.apiGetMoveList(pokemon.pokemon_name);
+      this.$bvModal.show("move-modal");
+    },
+    async showStatsModal(_pokemon) {
+      this.selectedPokemon = _pokemon;
+      await this.apiGetNatureHash();
+      this.$bvModal.show("stats-modal");
     },
     apiGetPokemonCustoms() {
       this.$axios
@@ -115,6 +145,32 @@ export default {
         .then(response => {
           console.log("Get Items", response.data);
           this.itemList = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    apiGetAbilityList(_pokemon_name) {
+      return this.$axios
+        .get(`http://localhost:3000/readonly/ability/${_pokemon_name}`)
+        .then(response => {
+          console.log(_pokemon_name)
+          console.log("Get Ability", response.data);
+          this.abilityList = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    apiGetNatureHash() {
+      return this.$axios
+        .get(`http://localhost:3000/readonly/nature`)
+        .then(response => {
+          this.natureHash = {};
+          for (let nature of response.data) {
+            this.natureHash[nature.nature_name] = nature;
+          }
+          console.log("Get Nature Hash", this.natureHash);
         })
         .catch(error => {
           console.log(error);

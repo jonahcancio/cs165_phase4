@@ -9,6 +9,15 @@ function listPokemonChoices() {
   });
 }
 
+function listPokemonStats(pokemon_name) {
+  return lib.queryTransaction({
+    query: `SELECT pokemon_name, type_1, type_2, normal_image,
+    hp_base, attack_base, defense_base, spatk_base, spdef_base, speed_base
+    FROM pokemon_bases WHERE pokemon_name = ?`,
+    escapes: [pokemon_name]
+  });
+}
+
 function listItemChoices() {
   return lib.queryTransaction({
     query: `SELECT item_name, item_description FROM item`,
@@ -52,6 +61,7 @@ function listNatureChoices() {
 
 module.exports = {
   listPokemons: listPokemonChoices,
+  listStats: listPokemonStats,
   listItems: listItemChoices,
   listNatures: listNatureChoices,
   listTypes: listTypeColors,

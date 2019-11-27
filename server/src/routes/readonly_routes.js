@@ -58,9 +58,22 @@ async function getAllMoves(request, response) {
   }
 }
 
+async function getAllStats(request, response) {
+  let { pokemon_name } = request.params;
+  try {
+    let result = await extractor.listStats(pokemon_name);
+    response.send(result);
+  } catch (error) {
+    response.status(400).send(error);
+  }
+}
+
+
+
 
 
 router.get("/pokemon", getAllPokemons);
+router.get("/pokemon/:pokemon_name", getAllStats);
 router.get("/type", getAllTypes);
 router.get("/nature", getAllNatures);
 router.get("/item", getAllItems);

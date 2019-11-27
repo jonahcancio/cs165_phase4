@@ -32,7 +32,7 @@
               label-align="center"
               label-class="medium-label"
             >
-              <b-form-input readonly :value="pokemon.ability_name" />
+              <b-form-input readonly :value="pokemon.ability_name" @click="showAbilityModal" />
             </b-form-group>
           </b-card>
         </shadow-hover>
@@ -65,6 +65,9 @@ export default {
     },
     showItemModal() {
       this.$eventBus.$emit("SHOW_ITEM_MODAL", this.pokemon);  
+    },
+    showAbilityModal() {
+      this.$eventBus.$emit("SHOW_ABILITY_MODAL", this.pokemon);
     }
   }
 };

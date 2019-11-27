@@ -1,6 +1,6 @@
 <template>
   <shadow-hover fullHeight>
-    <b-card title="Stats" class="full-height">
+    <b-card title="Stats" class="full-height" @click="showStatsModal">
       <b-form-group
         label="HP"
         label-size="sm"
@@ -55,6 +55,14 @@
       >
         <b-form-input id="input-level" size="sm" readonly :value="pokemon.speed_total"></b-form-input>
       </b-form-group>
+       <b-form-group
+        label="Nature"
+        label-size="sm"
+        label-align="left"
+        label-class="tiny-label"
+      >
+        <b-form-input id="input-level" size="sm" readonly :value="pokemon.nature_name"></b-form-input>
+      </b-form-group>
     </b-card>
   </shadow-hover>
 </template>
@@ -62,12 +70,12 @@
 <script>
 export default {
   props: {
-    pokemon: {
-      type: Object
-    }
+    pokemon: Object
   },
-  computed: {
-
+  methods: {
+    showStatsModal() {
+      this.$eventBus.$emit("SHOW_STATS_MODAL", this.pokemon)
+    }
   }
 };
 </script>

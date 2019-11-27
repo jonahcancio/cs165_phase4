@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal id="details-modal" scrollable size="xl" @ok="apiPutItem">
+    <b-modal id="details-modal" scrollable size="xl" @ok="apiPutDetails">
       <b-form-group label="Level:" label-size="md" label-align="left" label-class="medium-label">
         <b-form-input id="input-level" type="number" size="md" v-model="level" />
       </b-form-group>
@@ -56,7 +56,7 @@ export default {
     }
   },
   methods: {
-    apiPutItem() {
+    apiPutDetails() {
       const { slot_id } = this.pokemon;
       const { level, happiness, gender, isShiny } = this;
       console.log(this.level);
