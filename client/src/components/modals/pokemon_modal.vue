@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal id="pokemon-modal" scrollable size="xl" @shown="initPokemonTable">
+    <b-modal id="pokemon-modal" scrollable size="xl" @shown="initPokemonTable" @ok="handleSubmit">
       <b-img center :src="imgUrl" thumbnail class="mb-3 header-img" />
 
       <b-table
@@ -25,13 +25,15 @@
       </b-table>
       <template v-slot:modal-footer="{ok, cancel}">
         <b-button @click="cancel" variant="secondary">Cancel</b-button>
-        <b-button @click="ok" variant="primary" :disabled="!selectedPokemon">{{ saveText }}</b-button>
+        <b-button @click="ok" variant="primary" :disabled="disableSubmit">{{ saveText }}</b-button>
       </template>
     </b-modal>
   </div>
 </template>
 
 <script>
+const console = window.console;
+
 export default {
   props: {
     pokemonList: {
@@ -70,11 +72,61 @@ export default {
         pokemon => pokemon.pokemon_name == this.initialPokemon.pokemon_name
       );
       this.$refs.pokemonTable.selectRow(index);
-      this.$console.log(index);
+      console.log(index);
     },
     onPokemonSelected(items) {
-      this.$console.log("selected", items);
+      console.log("selected", items);
       this.selectedPokemon = items[0];
+    },
+    handleSubmit() {
+      console.log("Submitting Pokemon Form");
+      this.isCreate ? this.apiPostPokemon() : this.apiPutPokemon();
+    },
+    apiPostPokemon() {
+      const { pokemon_name } = this.selectedPokemon;
+      this.$axios
+        .post("http://localhost:3000/user/3/team/1/pokemon", {
+          pokemon_name: pokemon_name
+        })
+        .then(response => {
+          console.log("POST Pokemon Success: ", response);
+          this.$eventBus.$emit("REFRESH_POKEMON");
+        })
+        .catch(error => {
+          console.log("Post Pokemon Error: ", error);
+        });
+    },
+    apiPutPokemon() {
+      const { slot_id } = this.initialPokemon;
+      const { pokemon_name } = this.selectedPokemon;
+      this.$axios
+        .put(`http://localhost:3000/user/3/team/1/pokemon/${slot_id}`, {
+          pokemon_name: pokemon_name,
+          ability_name: null,
+          move_1: null,
+          move_2: null,
+          move_3: null,
+          move_4: null
+          // hp_iv: 31,
+          // attack_iv: 31,
+          // defense_iv: 31,
+          // spatk_iv: 31,
+          // spdef_iv: 31,
+          // speed_iv: 31,
+          // hp_ev: 0,
+          // attack_ev: 0,
+          // defense_ev: 0,
+          // spatk_ev: 0,
+          // spdef_ev: 0,
+          // speed_ev: 0
+        })
+        .then(response => {
+          console.log("PUT Pokemon Success: ", response);
+          this.$eventBus.$emit("REFRESH_POKEMON");
+        })
+        .catch(error => {
+          console.log("PUT Pokemon Error: ", error);
+        });
     }
   },
   computed: {
@@ -85,7 +137,14 @@ export default {
         : require("@/assets/mystery_pokemon.jpg");
     },
     saveText() {
-      return this.isCreate? "Add Pokemon" : "Update Pokemon"
+      return this.isCreate ? "Add Pokemon" : "Update Pokemon";
+    },
+    disableSubmit() {
+      const { selectedPokemon, initialPokemon } = this;
+      return (
+        !selectedPokemon ||
+        selectedPokemon.pokemon_name == initialPokemon.pokemon_name
+      );
     }
   }
 };

@@ -20,7 +20,7 @@
               label-align="center"
               label-class="medium-label"
             >
-              <b-form-input readonly :value="pokemon.item_name" />
+              <b-form-input readonly :value="pokemon.item_name" @click="showItemModal"/>
             </b-form-group>
           </b-card>
         </shadow-hover>
@@ -62,6 +62,9 @@ export default {
   methods: {
     showDeleteModal() {
       this.$eventBus.$emit("SHOW_DELETE_MODAL", this.pokemon);  
+    },
+    showItemModal() {
+      this.$eventBus.$emit("SHOW_ITEM_MODAL", this.pokemon);  
     }
   }
 };

@@ -21,5 +21,10 @@ Vue.component("pokemon-moves-card", PokemonMoveCard);
 // Modal Components
 import PokemonModal from "@/components/modals/pokemon_modal";
 import DeleteModal from "@/components/modals/delete_modal";
+import ItemModal from "@/components/modals/item_modal";
+import DetailsModal from "@/components/modals/details_modal";
+
 Vue.component("pokemon-modal", PokemonModal);
 Vue.component("delete-modal", DeleteModal);
+Vue.component("item-modal", ItemModal);
+Vue.component("details-modal", DetailsModal);

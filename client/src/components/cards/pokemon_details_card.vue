@@ -1,7 +1,7 @@
 <template>
   <shadow-hover>
     <b-card title="Details">
-      <b-row no-gutters>
+      <b-row no-gutters @click="showDetailsModal">
         <b-col cols="3">
           <b-form-group label="Level" label-size="sm" label-align="left" label-class="tiny-label">
             <b-form-input id="input-level" size="sm" readonly :value="pokemon.p_level"></b-form-input>
@@ -24,7 +24,7 @@
         </b-col>
         <b-col cols="3">
           <b-form-group label="Shiny" label-size="sm" label-align="left" label-class="tiny-label">
-            <b-form-input id="input-shiny" size="sm" readonly :value="pokemon.is_shiny"></b-form-input>
+            <b-form-input id="input-shiny" size="sm" readonly :value="shinyString"></b-form-input>
           </b-form-group>
         </b-col>
       </b-row>
@@ -34,11 +34,22 @@
 
 <script>
 export default {
-   props: {
-    pokemon: {
-      type: Object
+  props: {
+    pokemon: Object
+  },
+  data() {
+    return {};
+  },
+  methods: {
+    showDetailsModal() {
+      this.$eventBus.$emit("SHOW_DETAILS_MODAL", this.pokemon);
     }
   },
+  computed: {
+    shinyString() {
+      return this.pokemon.is_shiny ? "Yes" : "No";
+    }
+  }
 };
 </script>
 

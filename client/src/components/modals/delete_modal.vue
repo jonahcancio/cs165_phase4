@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal id="delete-modal" size="xl">
+    <b-modal id="delete-modal" size="xl" @ok="apiDeletePokemon">
       <b-img center :src="imgUrl" thumbnail class="mb-3 header-img" />
       <div>
         Are you sure you want to delete
@@ -15,6 +15,8 @@
 </template>
 
 <script>
+const console = window.console;
+
 export default {
   props: {
     pokemon: Object
@@ -22,7 +24,20 @@ export default {
   data() {
     return {};
   },
-  methods: {},
+  methods: {
+    apiDeletePokemon() {
+      const { slot_id } = this.pokemon;
+      this.$axios
+        .delete(`http://localhost:3000/user/3/team/1/pokemon/${slot_id}`)
+        .then(response => {
+          console.log("DELETE Pokemon Success: ", response);
+          this.$eventBus.$emit("REFRESH_POKEMON");
+        })
+        .catch(error => {
+          console.log("DELETE Pokemon Error: ", error);
+        });
+    }
+  },
   computed: {
     imgUrl() {
       const img = this.pokemon && this.pokemon.normal_image;
