@@ -10,46 +10,35 @@
         <b-col>Total</b-col>
       </b-row>
       <br />
-      <b-row>
-        <b-col>HP</b-col>
+      <b-row v-for="(val, key) in stats" :key="key" class="mb-3">
+        <b-col>{{ val.title }}</b-col>
         <b-col>
-          <b-form-input size="md" readonly v-model="hp.base" />
+          <b-form-input size="md" readonly v-model="val.base" />
         </b-col>
         <b-col>
-          <b-form-input size="md" v-model="hp.iv" />
+          <b-form-input size="md" v-model="val.iv" type="number" />
         </b-col>
         <b-col>
-          <b-form-input size="md" v-model="hp.ev" />
+          <b-form-input size="md" v-model="val.ev" type="number" />
         </b-col>
         <b-col>
-          <b-form-input size="md" readonly :value="boostString('hp')" />
+          <b-form-input size="md" readonly :value="boostString(key)" />
         </b-col>
         <b-col>
-          <b-form-input size="md" readonly :value="statTotal('hp')" />
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col>Attack</b-col>
-        <b-col>
-          <b-form-input size="md" readonly v-model="atk.base" />
-        </b-col>
-        <b-col>
-          <b-form-input size="md" v-model="atk.iv" />
-        </b-col>
-        <b-col>
-          <b-form-input size="md" v-model="atk.ev" />
-        </b-col>
-        <b-col>
-          <b-form-input size="md" readonly :value="boostString('attack')" />
-        </b-col>
-        <b-col>
-          <b-form-input size="md" readonly :value="statTotal('attack')" />
+          <b-form-input size="md" readonly :value="statTotal(key)" />
         </b-col>
       </b-row>
-
+      <b-form-group
+        label="Nature"
+        label-size="sm"
+        label-align="left"
+        label-class="medium-label font-weight-bold"
+      >
+        <b-form-select v-model="nature" :options="natureOptions"></b-form-select>
+      </b-form-group>
       <template v-slot:modal-footer="{ok, cancel}">
         <b-button @click="cancel" variant="secondary">Cancel</b-button>
-        <b-button @click="ok" variant="primary" :disabled="disableSubmit">Update Stats</b-button>
+        <b-button @click="ok" variant="primary">Update Stats</b-button>
       </template>
     </b-modal>
   </div>
@@ -66,77 +55,53 @@ export default {
   data() {
     return {
       nature: this.pokemon.nature_name,
-      hp: {
-        base: 0,
-        iv: 0,
-        ev: 0
+      stats: {
+        hp: {title: "HP"},
+        atk: {title: "Attack"},
+        def: {title: "Defense"},
+        spa: {title: "Sp. Atk"},
+        spd: {title: "Sp. Def"},
+        spe: {title: "Speed"}
       },
-      atk: {
-        base: 0,
-        iv: 0,
-        ev: 0
-      },
-      def: {
-        base: 0,
-        iv: 0,
-        ev: 0
-      },
-      spa: {
-        base: 0,
-        iv: 0,
-        ev: 0
-      },
-      spd: {
-        base: 0,
-        iv: 0,
-        ev: 0
-      },
-      spe: {
-        base: 0,
-        iv: 0,
-        ev: 0
-      }
+      natureOptions: []
     };
   },
   methods: {
     initStats() {
       const { pokemon } = this;
       this.nature = pokemon.nature_name;
-      this.hp = {
-        base: pokemon.hp_base,
-        iv: pokemon.hp_iv,
-        ev: pokemon.hp_ev
-      };
-      this.atk = {
-        base: pokemon.attack_base,
-        iv: pokemon.attack_iv,
-        ev: pokemon.attack_ev
-      };
-      this.def = {
-        base: pokemon.defense_base,
-        iv: pokemon.defense_iv,
-        ev: pokemon.defense_ev
-      };
-      this.spa = {
-        base: pokemon.spatk_base,
-        iv: pokemon.spatk_iv,
-        ev: pokemon.spatk_ev
-      };
-      this.spd = {
-        base: pokemon.spdef_base,
-        iv: pokemon.spdef_iv,
-        ev: pokemon.spdef_ev
-      };
-      this.spe = {
-        base: pokemon.speed_base,
-        iv: pokemon.speed_iv,
-        ev: pokemon.speed_ev
-      };
+      for (let stat in this.stats) {
+        this.stats[stat] = {
+          ...this.stats[stat],
+          base: Number(pokemon[`${stat}_base`]),
+          iv: Number(pokemon[`${stat}_iv`]),
+          ev: Number(pokemon[`${stat}_ev`])
+        };
+      }
+      this.natureOptions = [];
+      for (let nature in this.natureHash) {
+        this.natureOptions.push({ value: nature, text: nature });
+      }
     },
     apiPutStats() {
       const { slot_id } = this.pokemon;
+      const s = this.stats
       this.$axios
-        .put(`http://localhost:3000/user/3/team/1/pokemon/${slot_id}`, {})
+        .put(`http://localhost:3000/user/3/team/1/pokemon/${slot_id}`, {
+          hp_iv: s.hp.iv,
+          atk_iv: s.atk.iv,
+          def_iv: s.def.iv,
+          spa_iv: s.spa.iv,
+          spd_iv: s.spd.iv,
+          spe_iv: s.spe.iv,
+          hp_ev: s.hp.ev,
+          atk_ev: s.atk.ev,
+          def_ev: s.def.ev,
+          spa_ev: s.spa.ev,
+          spd_ev: s.spd.ev,
+          spe_ev: s.spe.ev,
+          nature_name: this.nature
+        })
         .then(response => {
           console.log("PUT Stats Success: ", response);
           this.$eventBus.$emit("REFRESH_POKEMON");
@@ -158,12 +123,16 @@ export default {
     },
     statTotal(stat) {
       const p = this.pokemon;
+      const s = this.stats;
+      s[stat].base = Number(s[stat].base);
+      s[stat].iv = Number(s[stat].iv);
+      s[stat].ev = Number(s[stat].ev);
+      // console.log(stat, s[stat].ev, typeof s[stat].ev)
+
       if (stat == "hp") {
         return (
           Math.floor(
-            ((2 * this["hp"].base +
-              this["hp"].iv +
-              Math.floor(Math.sqrt(this["hp"].ev) / 4)) *
+            ((2 * s[stat].base + s[stat].iv + Math.floor(s[stat].ev / 4)) *
               p["p_level"]) /
               100
           ) +
@@ -171,28 +140,22 @@ export default {
           10
         );
       } else {
-        // const natureObj = this.natureHash[this.nature];
-        // const natureMult = natureObj && Number(natureObj[`${stat}_mult`]);
-        // return (
-        //   (Math.floor(
-        //     ((2 * this[`${stat}`].base +
-        //       this[`${stat}`].iv +
-        //       Math.floor(Math.sqrt(this[`${stat}`].ev) / 4)) *
-        //       p[`${stat}`]) /
-        //       100
-        //   ) +
-        //     5) *
-        //   natureMult
-        // );
-        return 0
+        const natureObj = this.natureHash[this.nature];
+        const natureMult = natureObj && Number(natureObj[`${stat}_mult`]);
+        return Math.round(
+          (Math.floor(
+            ((2 * s[stat].base + s[stat].iv + Math.floor(s[stat].ev / 4)) *
+              p["p_level"]) /
+              100
+          ) +
+            5) *
+            natureMult
+        );
       }
     }
   },
 
   computed: {
-    disableSubmit() {
-      return true;
-    }
   }
 };
 </script>

@@ -17,7 +17,7 @@
         label-class="tiny-label"
         label-cols="3"
       >
-        <b-form-input id="input-level" size="sm" readonly :value="pokemon.attack_total"></b-form-input>
+        <b-form-input id="input-level" size="sm" readonly :value="pokemon.atk_total"></b-form-input>
       </b-form-group>
       <b-form-group
         label="Def"
@@ -26,7 +26,7 @@
         label-class="tiny-label"
         label-cols="3"
       >
-        <b-form-input id="input-level" size="sm" readonly :value="pokemon.defense_total"></b-form-input>
+        <b-form-input id="input-level" size="sm" readonly :value="pokemon.def_total"></b-form-input>
       </b-form-group>
       <b-form-group
         label="SpA"
@@ -35,7 +35,7 @@
         label-class="tiny-label"
         label-cols="3"
       >
-        <b-form-input id="input-level" size="sm" readonly :value="pokemon.spatk_total"></b-form-input>
+        <b-form-input id="input-level" size="sm" readonly :value="pokemon.spa_total"></b-form-input>
       </b-form-group>
       <b-form-group
         label="SpD"
@@ -44,7 +44,7 @@
         label-class="tiny-label"
         label-cols="3"
       >
-        <b-form-input id="input-level" size="sm" readonly :value="pokemon.spdef_total"></b-form-input>
+        <b-form-input id="input-level" size="sm" readonly :value="pokemon.spd_total"></b-form-input>
       </b-form-group>
       <b-form-group
         label="Spe"
@@ -53,7 +53,7 @@
         label-class="tiny-label"
         label-cols="3"
       >
-        <b-form-input id="input-level" size="sm" readonly :value="pokemon.speed_total"></b-form-input>
+        <b-form-input id="input-level" size="sm" readonly :value="pokemon.spe_total"></b-form-input>
       </b-form-group>
        <b-form-group
         label="Nature"

@@ -5,10 +5,10 @@ function listPokemons(user_id, team_id) {
     query: `SELECT c.slot_id, b.pokemon_name, c.nickname, b.normal_image,
       b.type_1, b.type_2,
       c.p_level, c.gender, c.happiness, c.is_shiny, c.item_name, c.ability_name, 
-      b.hp_base, b.attack_base, b.defense_base, b.spatk_base, b.spdef_base, b.speed_base,
-      c.hp_iv, c.attack_iv, c.defense_iv, c.spatk_iv, c.spdef_iv, c.speed_iv,
-      c.hp_ev, c.attack_ev,  c.defense_ev, c.spatk_ev, c.spdef_ev, c.speed_ev,
-      ts.hp_total, ts.attack_total,  ts.defense_total, ts.spatk_total, ts.spdef_total, ts.speed_total,
+      b.hp_base, b.atk_base, b.def_base, b.spa_base, b.spd_base, b.spe_base,
+      c.hp_iv, c.atk_iv, c.def_iv, c.spa_iv, c.spd_iv, c.spe_iv,
+      c.hp_ev, c.atk_ev,  c.def_ev, c.spa_ev, c.spd_ev, c.spe_ev,
+      ts.hp_total, ts.atk_total,  ts.def_total, ts.spa_total, ts.spd_total, ts.spe_total,
       c.nature_name, c.move_1, c.move_2, c.move_3, c.move_4      
       FROM pokemon_bases AS b JOIN pokemon_customs AS c USING(pokemon_name)
       JOIN pokemon_total_stats as ts USING(user_id, team_id, slot_id)
@@ -22,10 +22,10 @@ function retrievePokemon(user_id, team_id, slot_id) {
     query: `SELECT c.slot_id, b.pokemon_name, c.nickname, b.normal_image,
       b.type_1, b.type_2,
       c.p_level, c.gender, c.happiness, c.is_shiny, c.item_name, c.ability_name, 
-      b.hp_base, b.attack_base, b.defense_base, b.spatk_base, b.spdef_base, b.speed_base,
-      c.hp_iv, c.attack_iv, c.defense_iv, c.spatk_iv, c.spdef_iv, c.speed_iv,
-      c.hp_ev, c.attack_ev,  c.defense_ev, c.spatk_ev, c.spdef_ev, c.speed_ev,
-      ts.hp_total, ts.attack_total,  ts.defense_total, ts.spatk_total, ts.spdef_total, ts.speed_total,
+      b.hp_base, b.atk_base, b.def_base, b.spa_base, b.spd_base, b.spe_base,
+      c.hp_iv, c.atk_iv, c.def_iv, c.spa_iv, c.spd_iv, c.spe_iv,
+      c.hp_ev, c.atk_ev,  c.def_ev, c.spa_ev, c.spd_ev, c.spe_ev,
+      ts.hp_total, ts.atk_total,  ts.def_total, ts.spa_total, ts.spd_total, ts.spe_total,
       c.nature_name, c.move_1, c.move_2, c.move_3, c.move_4      
       FROM pokemon_bases AS b JOIN pokemon_customs AS c USING(pokemon_name)
       JOIN pokemon_total_stats as ts USING(user_id, team_id, slot_id)

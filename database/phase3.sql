@@ -18,8 +18,8 @@ INSERT INTO pokemon_customs VALUES
  -- getting the in-depth stats of a pokemon in a team
  SELECT pokemon_name,
   c.nickname, c.p_level, c.gender, c.happiness, c.is_shiny, c.item_name, c.ability_name, 
-  c.hp_iv, c.attack_iv, c.defense_iv, c.spatk_iv, c.spdef_iv, c.speed_iv,
-  c.hp_ev, c.attack_ev,  c.defense_ev, c.spatk_ev, c.spdef_ev, c.speed_ev,
+  c.hp_iv, c.atk_iv, c.def_iv, c.spa_iv, c.spd_iv, c.spe_iv,
+  c.hp_ev, c.atk_ev,  c.def_ev, c.spa_ev, c.spd_ev, c.spe_ev,
   c.nature_name, c.move1, c.move2, c.move3, c.move4,
   b.normal_image, b.shiny_image, b.type1, b.type2
   FROM pokemon_bases AS b JOIN pokemon_customs AS c USING(pokemon_name)

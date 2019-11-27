@@ -56,11 +56,11 @@ export default {
         { key: "pokemon_name", label: "Pokemon" },
         { key: "types", label: "Types" },
         { key: "hp_base", label: "HP" },
-        { key: "attack_base", label: "Atk" },
-        { key: "defense_base", label: "Def" },
-        { key: "spatk_base", label: "SpA" },
-        { key: "spdef_base", label: "SpD" },
-        { key: "speed_base", label: "Spe" }
+        { key: "atk_base", label: "Atk" },
+        { key: "def_base", label: "Def" },
+        { key: "spa_base", label: "SpA" },
+        { key: "spd_base", label: "SpD" },
+        { key: "spe_base", label: "Spe" }
       ],
       selectedPokemon: null
     };
@@ -108,17 +108,17 @@ export default {
           move_3: null,
           move_4: null
           // hp_iv: 31,
-          // attack_iv: 31,
-          // defense_iv: 31,
-          // spatk_iv: 31,
-          // spdef_iv: 31,
-          // speed_iv: 31,
+          // atk_iv: 31,
+          // def_iv: 31,
+          // spa_iv: 31,
+          // spd_iv: 31,
+          // spe_iv: 31,
           // hp_ev: 0,
-          // attack_ev: 0,
-          // defense_ev: 0,
-          // spatk_ev: 0,
-          // spdef_ev: 0,
-          // speed_ev: 0
+          // atk_ev: 0,
+          // def_ev: 0,
+          // spa_ev: 0,
+          // spd_ev: 0,
+          // spe_ev: 0
         })
         .then(response => {
           console.log("PUT Pokemon Success: ", response);

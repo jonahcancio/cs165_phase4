@@ -3,7 +3,7 @@ const lib = require("./lib");
 function listPokemonChoices() {
   return lib.queryTransaction({
     query: `SELECT pokemon_name, type_1, type_2, normal_image,
-    hp_base, attack_base, defense_base, spatk_base, spdef_base, speed_base
+    hp_base, atk_base, def_base, spa_base, spd_base, spe_base
     FROM pokemon_bases`,
     escapes: []
   });
@@ -12,7 +12,7 @@ function listPokemonChoices() {
 function listPokemonStats(pokemon_name) {
   return lib.queryTransaction({
     query: `SELECT pokemon_name, type_1, type_2, normal_image,
-    hp_base, attack_base, defense_base, spatk_base, spdef_base, speed_base
+    hp_base, atk_base, def_base, spa_base, spd_base, spe_base
     FROM pokemon_bases WHERE pokemon_name = ?`,
     escapes: [pokemon_name]
   });
@@ -53,7 +53,7 @@ function listTypeColors() {
 
 function listNatureChoices() {
   return lib.queryTransaction({
-    query: `SELECT nature_name, attack_mult, defense_mult, spatk_mult, spdef_mult, speed_mult FROM nature`,
+    query: `SELECT nature_name, atk_mult, def_mult, spa_mult, spd_mult, spe_mult FROM nature`,
     escapes: []
   });
 }

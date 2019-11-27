@@ -74,11 +74,11 @@ INSERT INTO p_type VALUES
 CREATE TABLE nature
 (
   nature_name VARCHAR(10),
-  attack_mult DECIMAL(3,2),
-  defense_mult DECIMAL(3,2),
-  spatk_mult DECIMAL(3,2),
-  spdef_mult DECIMAL(3,2),
-  speed_mult DECIMAL(3,2),
+  atk_mult DECIMAL(3,2),
+  def_mult DECIMAL(3,2),
+  spa_mult DECIMAL(3,2),
+  spd_mult DECIMAL(3,2),
+  spe_mult DECIMAL(3,2),
   PRIMARY KEY(nature_name)
 );
 INSERT INTO nature VALUES
@@ -137,11 +137,11 @@ CREATE TABLE pokemon_bases
   normal_image VARCHAR(100),
   shiny_image VARCHAR(100),
   hp_base INT UNSIGNED,
-  attack_base INT UNSIGNED,
-  defense_base INT UNSIGNED,
-  spatk_base INT UNSIGNED,
-  spdef_base INT UNSIGNED,
-  speed_base INT UNSIGNED,
+  atk_base INT UNSIGNED,
+  def_base INT UNSIGNED,
+  spa_base INT UNSIGNED,
+  spd_base INT UNSIGNED,
+  spe_base INT UNSIGNED,
   PRIMARY KEY(pokemon_name),
   FOREIGN KEY (type_1) REFERENCES p_type(type_name),
   FOREIGN KEY (type_2) REFERENCES p_type(type_name)
@@ -290,17 +290,17 @@ CREATE TABLE pokemon_customs
   move_3 VARCHAR(30),
   move_4 VARCHAR(30),
   hp_iv INT UNSIGNED NOT NULL DEFAULT 31,
-  attack_iv INT  UNSIGNED NOT NULL DEFAULT 31,
-  defense_iv INT UNSIGNED NOT NULL DEFAULT 31,
-  spatk_iv INT UNSIGNED NOT NULL DEFAULT 31,
-  spdef_iv INT UNSIGNED NOT NULL DEFAULT 31,
-  speed_iv INT UNSIGNED NOT NULL DEFAULT 31,
+  atk_iv INT  UNSIGNED NOT NULL DEFAULT 31,
+  def_iv INT UNSIGNED NOT NULL DEFAULT 31,
+  spa_iv INT UNSIGNED NOT NULL DEFAULT 31,
+  spd_iv INT UNSIGNED NOT NULL DEFAULT 31,
+  spe_iv INT UNSIGNED NOT NULL DEFAULT 31,
   hp_ev INT UNSIGNED NOT NULL DEFAULT 0,
-  attack_ev INT UNSIGNED NOT NULL DEFAULT 0,
-  defense_ev INT UNSIGNED NOT NULL DEFAULT 0,
-  spatk_ev INT UNSIGNED NOT NULL DEFAULT 0,
-  spdef_ev INT UNSIGNED NOT NULL DEFAULT 0,
-  speed_ev INT UNSIGNED NOT NULL DEFAULT 0,
+  atk_ev INT UNSIGNED NOT NULL DEFAULT 0,
+  def_ev INT UNSIGNED NOT NULL DEFAULT 0,
+  spa_ev INT UNSIGNED NOT NULL DEFAULT 0,
+  spd_ev INT UNSIGNED NOT NULL DEFAULT 0,
+  spe_ev INT UNSIGNED NOT NULL DEFAULT 0,
   nature_name VARCHAR(10) DEFAULT 'Serious',
   PRIMARY KEY (user_id, team_id, slot_id),
   FOREIGN KEY  (user_id, team_id) REFERENCES user_team (user_id, team_id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -331,11 +331,11 @@ CREATE VIEW pokemon_total_stats AS
 (
   SELECT user_id, team_id, slot_id, pokemon_name,
   ( FLOOR((2 * hp_base + hp_iv + hp_ev/4) * p_level /  CAST(100 AS DECIMAL(5,2)) ) + p_level + 10 ) as hp_total,
-  FLOOR( (FLOOR((2 * attack_base + attack_iv + attack_ev/4) * p_level / CAST(100 AS DECIMAL(5,2)) ) + 5) * attack_mult ) as attack_total,
-  FLOOR( (FLOOR((2 * defense_base + defense_iv + defense_ev/4) * p_level / CAST(100 AS DECIMAL(5,2)) ) + 5) * defense_mult ) as defense_total,
-  FLOOR( (FLOOR((2 * spatk_base + spatk_iv + spatk_ev/4) * p_level / CAST(100 AS DECIMAL(5,2)) ) + 5) * spatk_mult ) as spatk_total,
-  FLOOR( (FLOOR((2 * spdef_base + spdef_iv + spdef_ev/4) * p_level / CAST(100 AS DECIMAL(5,2)) ) + 5) * spdef_mult ) as spdef_total,
-  FLOOR( (FLOOR((2 * speed_base + speed_iv + speed_ev/4) * p_level / CAST(100 AS DECIMAL(5,2)) ) + 5) * speed_mult ) as speed_total
+  FLOOR( (FLOOR((2 * atk_base + atk_iv + atk_ev/4) * p_level / CAST(100 AS DECIMAL(5,2)) ) + 5) * atk_mult ) as atk_total,
+  FLOOR( (FLOOR((2 * def_base + def_iv + def_ev/4) * p_level / CAST(100 AS DECIMAL(5,2)) ) + 5) * def_mult ) as def_total,
+  FLOOR( (FLOOR((2 * spa_base + spa_iv + spa_ev/4) * p_level / CAST(100 AS DECIMAL(5,2)) ) + 5) * spa_mult ) as spa_total,
+  FLOOR( (FLOOR((2 * spd_base + spd_iv + spd_ev/4) * p_level / CAST(100 AS DECIMAL(5,2)) ) + 5) * spd_mult ) as spd_total,
+  FLOOR( (FLOOR((2 * spe_base + spe_iv + spe_ev/4) * p_level / CAST(100 AS DECIMAL(5,2)) ) + 5) * spe_mult ) as spe_total
   FROM pokemon_customs  JOIN pokemon_bases USING(pokemon_name) JOIN nature USING(nature_name)
 );
 
