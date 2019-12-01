@@ -19,7 +19,7 @@
         </b-col>
         <b-col cols="3">
           <b-form-group label="Gender" label-size="sm" label-align="left" label-class="tiny-label">
-            <b-form-input id="input-gender" size="sm" readonly :value="pokemon.gender"></b-form-input>
+            <b-form-input id="input-gender" size="sm" readonly :value="genderString"></b-form-input>
           </b-form-group>
         </b-col>
         <b-col cols="3">
@@ -48,6 +48,9 @@ export default {
   computed: {
     shinyString() {
       return this.pokemon.is_shiny ? "Yes" : "No";
+    },
+    genderString() {
+      return this.pokemon.gender || 'None'
     }
   }
 };

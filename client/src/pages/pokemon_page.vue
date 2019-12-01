@@ -105,7 +105,7 @@ export default {
     },
     apiGetPokemonCustoms() {
       this.$axios
-        .get("http://localhost:3000/user/3/team/1/pokemon/")
+        .get(`${this.$backendUrl}/user/1/team/1/pokemon/`)
         .then(response => {
           console.log("Get Pokemon Customs", response.data);
           this.pokemonCustoms = response.data;
@@ -116,7 +116,7 @@ export default {
     },
     apiGetTypeColors() {
       this.$axios
-        .get("http://localhost:3000/readonly/type")
+        .get(`${this.$backendUrl}/readonly/type`)
         .then(response => {
           this.typeColorHash = {};
           for (let p_type of response.data) {
@@ -130,7 +130,7 @@ export default {
     },
     apiGetPokemonBases() {
       return this.$axios
-        .get("http://localhost:3000/readonly/pokemon/")
+        .get(`${this.$backendUrl}/readonly/pokemon/`)
         .then(response => {
           console.log("Get Pokemon Bases", response.data);
           this.pokemonBases = response.data;
@@ -141,7 +141,7 @@ export default {
     },
     apiGetItems() {
       return this.$axios
-        .get("http://localhost:3000/readonly/item/")
+        .get(`${this.$backendUrl}/readonly/item/`)
         .then(response => {
           console.log("Get Items", response.data);
           this.itemList = response.data;
@@ -152,7 +152,7 @@ export default {
     },
     apiGetAbilityList(_pokemon_name) {
       return this.$axios
-        .get(`http://localhost:3000/readonly/ability/${_pokemon_name}`)
+        .get(`${this.$backendUrl}/readonly/ability/${_pokemon_name}`)
         .then(response => {
           console.log(_pokemon_name)
           console.log("Get Ability", response.data);
@@ -162,9 +162,21 @@ export default {
           console.log(error);
         });
     },
+    apiGetMoveList(_pokemon_name) {
+      return this.$axios
+        .get(`${this.$backendUrl}/readonly/move/${_pokemon_name}`)
+        .then(response => {
+          console.log(_pokemon_name)
+          console.log("Get Move", response.data);
+          this.moveList = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     apiGetNatureHash() {
       return this.$axios
-        .get(`http://localhost:3000/readonly/nature`)
+        .get(`${this.$backendUrl}/readonly/nature`)
         .then(response => {
           this.natureHash = {};
           for (let nature of response.data) {

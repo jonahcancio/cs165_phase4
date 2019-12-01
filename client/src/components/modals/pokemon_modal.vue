@@ -1,7 +1,19 @@
 <template>
   <div>
     <b-modal id="pokemon-modal" scrollable size="xl" @shown="initPokemonTable" @ok="handleSubmit">
-      <b-img center :src="imgUrl" thumbnail class="mb-3 header-img" />
+      <b-row>
+        <b-col cols="4">
+          <b-form-group
+            label="Nickname"
+            label-size="sm"
+            label-align="left"
+            label-class="medium-label font-weight-bold"
+          >
+            <b-form-input v-model="nickname"></b-form-input>
+          </b-form-group>
+        </b-col>
+        <b-img center :src="imgUrl" thumbnail class="mb-3 header-img" />
+      </b-row>
 
       <b-table
         hover
@@ -62,7 +74,8 @@ export default {
         { key: "spd_base", label: "SpD" },
         { key: "spe_base", label: "Spe" }
       ],
-      selectedPokemon: null
+      selectedPokemon: null,
+      nickname: ""
     };
   },
   methods: {
@@ -72,6 +85,7 @@ export default {
         pokemon => pokemon.pokemon_name == this.initialPokemon.pokemon_name
       );
       this.$refs.pokemonTable.selectRow(index);
+      this.nickname = this.initialPokemon.nickname;
       console.log(index);
     },
     onPokemonSelected(items) {
@@ -85,8 +99,9 @@ export default {
     apiPostPokemon() {
       const { pokemon_name } = this.selectedPokemon;
       this.$axios
-        .post("http://localhost:3000/user/3/team/1/pokemon", {
-          pokemon_name: pokemon_name
+        .post(`${this.$backendUrl}/user/1/team/1/pokemon`, {
+          pokemon_name: pokemon_name,
+          nickname: this.nickname,
         })
         .then(response => {
           console.log("POST Pokemon Success: ", response);
@@ -100,8 +115,9 @@ export default {
       const { slot_id } = this.initialPokemon;
       const { pokemon_name } = this.selectedPokemon;
       this.$axios
-        .put(`http://localhost:3000/user/3/team/1/pokemon/${slot_id}`, {
+        .put(`${this.$backendUrl}/user/1/team/1/pokemon/${slot_id}`, {
           pokemon_name: pokemon_name,
+          nickname: this.nickname,
           ability_name: null,
           move_1: null,
           move_2: null,
@@ -133,17 +149,18 @@ export default {
     imgUrl() {
       const img = this.selectedPokemon && this.selectedPokemon.normal_image;
       return img
-        ? "http://localhost:3000/static/" + img
+        ? `${this.$backendUrl}/static/` + img
         : require("@/assets/mystery_pokemon.jpg");
     },
     saveText() {
       return this.isCreate ? "Add Pokemon" : "Update Pokemon";
     },
     disableSubmit() {
-      const { selectedPokemon, initialPokemon } = this;
+      const { selectedPokemon, initialPokemon, nickname } = this;
       return (
         !selectedPokemon ||
-        selectedPokemon.pokemon_name == initialPokemon.pokemon_name
+        (nickname == this.initialPokemon.nickname &&
+          selectedPokemon.pokemon_name == initialPokemon.pokemon_name)
       );
     }
   }

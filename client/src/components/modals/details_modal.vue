@@ -61,7 +61,7 @@ export default {
       const { level, happiness, gender, isShiny } = this;
       console.log(this.level);
       this.$axios
-        .put(`http://localhost:3000/user/3/team/1/pokemon/${slot_id}`, {
+        .put(`${this.$backendUrl}/user/1/team/1/pokemon/${slot_id}`, {
           p_level: level,
           happiness: happiness,
           gender: gender,

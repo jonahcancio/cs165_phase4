@@ -6,11 +6,19 @@
 -- Database Engine: MySQL
 
 
+
+
+
 -- database creation
-CREATE DATABASE IF NOT EXISTS cancio;
+DROP DATABASE cancio;
+CREATE DATABASE cancio;
 USE cancio;
 
-START TRANSACTION;
+-- user creation
+CREATE USER IF NOT EXISTS 'jandel'@'localhost';
+SET PASSWORD FOR'jandel'@'localhost' = 'cancio';	
+GRANT ALL PRIVILEGES ON cancio.* TO 'jandel'@'localhost';
+
 
 -- prefixed with p_ since USER is reserved
 CREATE TABLE p_user
@@ -20,10 +28,7 @@ CREATE TABLE p_user
   PRIMARY KEY(user_id)
 );
 INSERT INTO p_user VALUES
-(1, 'Ashe Ketchum'),
-(2, 'Serena'),
-(3, 'Masashiro Sakurai')
-;
+(1, 'Ashe Ketchum');
 
 -- teams of every user
 CREATE TABLE user_team
@@ -35,10 +40,7 @@ CREATE TABLE user_team
   FOREIGN KEY(user_id) REFERENCES p_user(user_id) ON DELETE CASCADE
 );
 INSERT INTO user_team VALUES
-(1, 1, 'Champion Team'),
-(2, 1, 'Performance'),
-(3, 1, 'Smash Roster')
-;
+(1, 1, 'The Very Best');
 
 -- new table created (originally not in phase 1) to enumerate pokemon types
 -- prefixed with p_ since TYPE is reserved
@@ -170,8 +172,12 @@ INSERT INTO ability VALUES
 ('Overgrow', 'At 1/3 or less of its max HP, this Pokemon''s attacking stat is 1.5x with Grass attacks.'),
 ('Chlorophyll', 'If Sunny Day is active, this Pokemon''s Speed is doubled.'),
 ('Blaze', 'At 1/3 or less of its max HP, this Pokemon''s attacking stat is 1.5x with Fire attacks.'),
-('Solar Power', 'If Sunny Day is active, this Pokemon''s Sp.Atk is 1.5x; loses 1/8 max HP per turn.')
-;
+('Solar Power', 'If Sunny Day is active, this Pokemon''s Sp.Atk is 1.5x; loses 1/8 max HP per turn.'),
+('Pressure', 'If this Pokemon is the target of a foe''s move, that move loses one additional PP.'),
+('Unnerve', 'While this Pokemon is active, it prevents opposing Pokemon from using Berries'),
+('Cute Charm', '30% chance of infatuating Pokemon of the opposite gender if they make contact.'),
+('Competitive', 'This Pokemon''s Sp. Atk is raised by 2 for each of its stats that is lowered by a foe.'),
+('Friend Guard', 'This Pokemon''s allies receive 3/4 damage from other Pokemon''s attacks.');
 
 -- limits the choice of abilities each pokemon can have
 CREATE TABLE pokemon_abilitysets 
@@ -190,7 +196,12 @@ INSERT INTO pokemon_abilitysets VALUES
 ('Ivysaur', 'Chlorophyll'),
 ('Ivysaur', 'Overgrow'),
 ('Charizard', 'Blaze'),
-('Charizard', 'Solar Power')
+('Charizard', 'Solar Power'),
+('Mewtwo', 'Pressure'),
+('Mewtwo', 'Unnerve'),
+('Jigglypuff', 'Cute Charm'),
+('Jigglypuff', 'Competitive'),
+('Jigglypuff', 'Friend Guard')
 ;
 
 -- list down the possible moves pokemon can learn/perform
@@ -231,7 +242,13 @@ INSERT INTO p_move VALUES
 ('Seismic Toss', 'Fighting', 'Physical', NULL, 100, 32, 'Does damage equal to the user''s level.'),
 ('Light Screen', 'Psychic', 'Status', NULL, NULL, 48, 'For 5 turns, special damage to allies is halved.'),
 ('Sunny Day', 'Fire', 'Status', NULL, NULL, 8, 'For 5 turns, intense sunlight powers Fire moves.'),
-('Psychic', 'Psychic', 'Special', 90, 100, 16, '10% chance to lower the target''s Sp. Def by 1.')
+('Psychic', 'Psychic', 'Special', 90, 100, 16, '10% chance to lower the target''s Sp. Def by 1.'),
+('Shadow Ball', 'Ghost', 'Special', 80, 100, 24, '20% chance to lower the target''s Sp. Def by 1.'),
+('Disable', 'Normal', 'Status', NULL, 100, 32, 'For 4 turns, disables the target''s last move used.'),
+('Rest', 'Psychic', 'Status', NULL, NULL, 16, 'User sleeps 2 turns and restores HP and status.'),
+('Pound', 'Normal', 'Physical', 40, 100, 56, 'No additional effect.'),
+('Sing', 'Normal', 'Status', NULL, 55, 24, 'Causes the target to fall asleep.'),
+('Rollout', 'Rock', 'Physical', 30, 90, 32, 'Power doubles with each hit. Repeats for 5 turns.')
 ;
 
 -- limits the choice of moves each pokemon can have
@@ -260,14 +277,29 @@ INSERT INTO pokemon_movesets VALUES
 ('Ivysaur', 'Razor Leaf'),
 ('Ivysaur', 'Solar Beam'),
 ('Ivysaur', 'Sludge Bomb'),
+('Ivysaur', 'Sunny Day'),
 ('Charizard', 'Flamethrower'),
 ('Charizard', 'Flare Blitz'),
 ('Charizard', 'Fly'),
 ('Charizard', 'Fire Blast'),
 ('Charizard', 'Seismic Toss'),
+('Charizard', 'Sunny Day'),
+('Mewtwo', 'Psychic'),
+('Mewtwo', 'Light Screen'),
+('Mewtwo', 'Shadow Ball'),
+('Mewtwo', 'Disable'),
+('Mewtwo', 'Rest'),
+('Mewtwo', 'Sunny Day'),
+('Jigglypuff', 'Rest'),
+('Jigglypuff', 'Rollout'),
+('Jigglypuff', 'Sing'),
+('Jigglypuff', 'Pound'),
 ('Squirtle', 'Return'),
 ('Ivysaur', 'Return'),
-('Charizard', 'Return')
+('Charizard', 'Return'),
+('Pikachu', 'Return'),
+('Mewtwo', 'Return'),
+('Jigglypuff', 'Return')
 ;
 
 -- Pokemon traits that are openly customizable by the user
@@ -314,13 +346,13 @@ CREATE TABLE pokemon_customs
   FOREIGN KEY (nature_name) REFERENCES nature(nature_name)
 );
 INSERT INTO pokemon_customs VALUES
-(3, 1, 1, 'Pikachu', NULL, 100, 'F', 255, 0, 'Sitrus Berry', 'Static', 
-'Quick Attack', 'Skull Bash', 'Thunder', 'Volt Tackle',
+(1, 1, 1, 'Charizard', NULL, 100, 'F', 255, 0, 'Sitrus Berry', 'Blaze', 
+'Seismic Toss', 'Flamethrower', 'Return', 'Flare Blitz',
 31, 31, 31, 31, 31, 31, 0, 0, 0, 0, 0, 0, 'Jolly'),
-(3, 1, 3, 'Squirtle', NULL, 100, 'M', 255, 0, 'Sitrus Berry', 'Torrent', 
+(1, 1, 2, 'Squirtle', NULL, 100, 'M', 255, 0, 'Sitrus Berry', 'Torrent', 
 'Hydro Pump', 'Withdraw', 'Waterfall', 'Return',
 31, 31, 31, 31, 31, 31, 0, 0, 0, 0, 0, 0, 'Quirky'),
-(3, 1, 5, 'Ivysaur', NULL, 100, 'M', 255, 0, 'Sitrus Berry', 'Overgrow', 
+(1, 1, 3, 'Ivysaur', NULL, 100, 'M', 255, 0, 'Sitrus Berry', 'Overgrow', 
 'Solar Beam', 'Bullet Seed', 'Power Whip', 'Return',
 31, 31, 31, 31, 31, 31, 0, 0, 0, 0, 0, 0, 'Bashful')
 ;
@@ -339,5 +371,3 @@ CREATE VIEW pokemon_total_stats AS
   FROM pokemon_customs  JOIN pokemon_bases USING(pokemon_name) JOIN nature USING(nature_name)
 );
 
-
-COMMIT;

@@ -28,7 +28,7 @@ export default {
     apiDeletePokemon() {
       const { slot_id } = this.pokemon;
       this.$axios
-        .delete(`http://localhost:3000/user/3/team/1/pokemon/${slot_id}`)
+        .delete(`${this.$backendUrl}/user/1/team/1/pokemon/${slot_id}`)
         .then(response => {
           console.log("DELETE Pokemon Success: ", response);
           this.$eventBus.$emit("REFRESH_POKEMON");
@@ -42,7 +42,7 @@ export default {
     imgUrl() {
       const img = this.pokemon && this.pokemon.normal_image;
       return img
-        ? "http://localhost:3000/static/" + img
+        ? `${this.$backendUrl}/static/` + img
         : require("@/assets/mystery_pokemon.jpg");
     }
   }

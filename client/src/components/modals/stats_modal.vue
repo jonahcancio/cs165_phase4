@@ -87,7 +87,7 @@ export default {
       const { slot_id } = this.pokemon;
       const s = this.stats
       this.$axios
-        .put(`http://localhost:3000/user/3/team/1/pokemon/${slot_id}`, {
+        .put(`${this.$backendUrl}/user/1/team/1/pokemon/${slot_id}`, {
           hp_iv: s.hp.iv,
           atk_iv: s.atk.iv,
           def_iv: s.def.iv,

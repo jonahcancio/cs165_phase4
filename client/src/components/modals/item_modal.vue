@@ -57,7 +57,7 @@ export default {
       const { slot_id } = this.initialPokemon;
       const { item_name } = this.selectedItem;
       this.$axios
-        .put(`http://localhost:3000/user/3/team/1/pokemon/${slot_id}`, {
+        .put(`${this.$backendUrl}/user/1/team/1/pokemon/${slot_id}`, {
           item_name: item_name          
         })
         .then(response => {

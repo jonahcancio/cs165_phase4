@@ -1,12 +1,12 @@
 <template>
   <shadow-hover fullHeight>
-    <b-card class="full-height" body-class="d-flex flex-column justify-content-between">
+    <b-card class="full-height" body-class="d-flex flex-column justify-content-between" @click="showPokemonModal">
       <b-form-group label="Nickname" label-size="sm" label-align="left" label-class="tiny-label">
         <b-form-input
           id="input-nickname"
           size="sm"
           readonly
-          :value="pokemon.nickname || pokemon.pokemon_name"
+          :value="pokemon.nickname"
         ></b-form-input>
       </b-form-group>
       <div>
@@ -28,7 +28,6 @@
           size="md"
           readonly
           :value="pokemon.pokemon_name"
-          @click="showPokemonModal"
         ></b-form-input>
       </b-form-group>
     </b-card>

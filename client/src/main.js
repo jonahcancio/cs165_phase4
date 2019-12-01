@@ -15,6 +15,7 @@ import axios from 'axios'
 Vue.prototype.$axios = axios;
 
 Vue.prototype.$eventBus = new Vue()
+Vue.prototype.$backendUrl = 'http://localhost:3000'
 
 Vue.config.productionTip = false;
 
