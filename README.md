@@ -36,7 +36,7 @@ This project assumes the ff:
 
    The backend is now up and running.
 
-4. Open **separate** command prompt in the **/client** directory and run the ff:
+4. Open a **separate** command prompt in the **/client** directory and run the ff:
 
    Inside /client directory:
    ```
